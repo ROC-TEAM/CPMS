@@ -3,7 +3,6 @@ using Abp.Authorization;
 using Abp.BackgroundJobs;
 using Abp.Events.Bus.Entities;
 using Abp.Notifications;
-using CPMS.Authorization.Menus;
 using CPMS.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -17,9 +16,10 @@ using System;
 namespace CPMS.Migrations
 {
     [DbContext(typeof(CPMSDbContext))]
-    partial class CPMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180611085842_20180611_Upgraded_To_CPMS_v1.1")]
+    partial class Upgraded_To_CPMS_v11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -858,6 +858,7 @@ namespace CPMS.Migrations
                     b.Property<bool>("Enabled");
 
                     b.Property<string>("IMG")
+                        .IsRequired()
                         .HasMaxLength(300);
 
                     b.Property<bool>("IsDeleted");
@@ -877,6 +878,7 @@ namespace CPMS.Migrations
                     b.Property<int>("Type");
 
                     b.Property<string>("URL")
+                        .IsRequired()
                         .HasMaxLength(300);
 
                     b.HasKey("Id");
@@ -939,22 +941,6 @@ namespace CPMS.Migrations
                     b.HasIndex("TenantId", "NormalizedName");
 
                     b.ToTable("AbpRoles");
-                });
-
-            modelBuilder.Entity("CPMS.Authorization.Roles.RoleMenu", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("MenuId");
-
-                    b.Property<int>("RoleId");
-
-                    b.Property<int?>("TenantId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AbpRoleMenus");
                 });
 
             modelBuilder.Entity("CPMS.Authorization.Users.User", b =>

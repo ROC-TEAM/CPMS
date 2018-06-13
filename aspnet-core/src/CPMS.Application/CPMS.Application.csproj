@@ -13,6 +13,11 @@
   <PropertyGroup>
     <DefineConstants>FEATURE_SIGNALR_ASPNETCORE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\CPMS.Application.xml</DocumentationFile>
+    <NoWarn>1701;1702;1587;1573;1572;1591</NoWarn>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CPMS.Core\CPMS.Core.csproj" />
   </ItemGroup>

@@ -20,6 +20,9 @@ using CPMS.MultiTenancy;
 
 namespace CPMS.Controllers
 {
+    /// <summary>
+    /// 认证授权
+    /// </summary>
     [Route("api/[controller]/[action]")]
     public class TokenAuthController : CPMSControllerBase
     {
@@ -49,6 +52,11 @@ namespace CPMS.Controllers
             _userRegistrationManager = userRegistrationManager;
         }
 
+        /// <summary>
+        /// 授权
+        /// </summary>
+        /// <param name="model">授权参数</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<AuthenticateResultModel> Authenticate([FromBody] AuthenticateModel model)
         {

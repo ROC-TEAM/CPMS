@@ -16,6 +16,11 @@ namespace CPMS.Authorization.Accounts
             _userRegistrationManager = userRegistrationManager;
         }
 
+        /// <summary>
+        /// 租户是否可用
+        /// </summary>
+        /// <param name="input">输入参数</param>
+        /// <returns></returns>
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
         {
             var tenant = await TenantManager.FindByTenancyNameAsync(input.TenancyName);
@@ -32,6 +37,11 @@ namespace CPMS.Authorization.Accounts
             return new IsTenantAvailableOutput(TenantAvailabilityState.Available, tenant.Id);
         }
 
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="input">输入参数</param>
+        /// <returns></returns>
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
             var user = await _userRegistrationManager.RegisterAsync(

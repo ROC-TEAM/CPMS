@@ -8,9 +8,14 @@ namespace CPMS.Authorization
     {
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
-            context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
-            context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
-            context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+            context.CreatePermission(PermissionNames.Pages_Users, L(PermissionNames.Pages_Users));
+            var rolePermission = context.CreatePermission(PermissionNames.Pages_Roles, L(PermissionNames.Pages_Roles));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Add, L(PermissionNames.Pages_Roles_Add));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Update, L(PermissionNames.Pages_Roles_Update));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Delete, L(PermissionNames.Pages_Roles_Delete));
+            rolePermission.CreateChildPermission(PermissionNames.Pages_Roles_Query, L(PermissionNames.Pages_Roles_Query));
+
+            context.CreatePermission(PermissionNames.Pages_Tenants, L(PermissionNames.Pages_Tenants), multiTenancySides: MultiTenancySides.Host);
         }
 
         private static ILocalizableString L(string name)

@@ -15,6 +15,9 @@ using Abp.Extensions;
 using CPMS.Authentication.JwtBearer;
 using CPMS.Configuration;
 using CPMS.Identity;
+using Abp.AspNetCore.Configuration;
+using Abp.Reflection.Extensions;
+using System.IO;
 
 #if FEATURE_SIGNALR
 using Microsoft.AspNet.SignalR;
@@ -31,6 +34,7 @@ namespace CPMS.Web.Host.Startup
     public class Startup
     {
         private const string _defaultCorsPolicyName = "localhost";
+        private const string _apiVersion = "V1.2";
 
         private readonly IConfigurationRoot _appConfiguration;
 
@@ -73,7 +77,7 @@ namespace CPMS.Web.Host.Startup
             // Swagger - Enable this line and the related lines in Configure method to enable swagger UI
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new Info { Title = "CPMS API", Version = "v1" });
+                options.SwaggerDoc(_apiVersion, new Info { Title = "CPMS API", Version = _apiVersion });
                 options.DocInclusionPredicate((docName, description) => true);
 
                 // Define the BearerAuth scheme that's in use
@@ -84,6 +88,11 @@ namespace CPMS.Web.Host.Startup
                     In = "header",
                     Type = "apiKey"
                 });
+
+                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                options.IncludeXmlComments(Path.Combine(baseDirectory, "CPMS.Web.Core.xml"));
+                options.IncludeXmlComments(Path.Combine(baseDirectory, "CPMS.Application.xml"));
+
                 // Assign scope requirements to operations based on AuthorizeAttribute
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
@@ -91,9 +100,15 @@ namespace CPMS.Web.Host.Startup
             // Configure Abp and Dependency Injection
             return services.AddAbp<CPMSWebHostModule>(
                 // Configure Log4Net logging
-                options => options.IocManager.IocContainer.AddFacility<LoggingFacility>(
-                    f => f.UseAbpLog4Net().WithConfig("log4net.config")
-                )
+                options =>
+                {
+                    options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                        f => f.UseAbpLog4Net().WithConfig("log4net.config")
+                    );
+
+                    //var configuration = options.IocManager.Resolve<AbpAspNetCoreConfiguration>();
+                    //configuration.AbpServiceRouteTemplate = (moduleName, controllerName, actionName) => $"api/{moduleName}/{controllerName}/{actionName}";
+                }
             );
         }
 
@@ -119,6 +134,7 @@ namespace CPMS.Web.Host.Startup
             });
 #endif
 
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -135,7 +151,7 @@ namespace CPMS.Web.Host.Startup
             // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "CPMS API V1");
+                options.SwaggerEndpoint("/swagger/" + _apiVersion + "/swagger.json", "CPMS API " + _apiVersion);
                 options.IndexStream = () => Assembly.GetExecutingAssembly()
                     .GetManifestResourceStream("CPMS.Web.Host.wwwroot.swagger.ui.index.html");
             }); // URL: /swagger

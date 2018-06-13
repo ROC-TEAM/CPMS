@@ -83,6 +83,7 @@ namespace CPMS.Roles
             CheckErrors(await _roleManager.DeleteAsync(role));
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Roles_Query)]
         public Task<ListResultDto<PermissionDto>> GetAllPermissions()
         {
             var permissions = PermissionManager.GetAllPermissions();

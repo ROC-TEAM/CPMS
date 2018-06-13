@@ -27,7 +27,7 @@ namespace CPMS
 #if FEATURE_SIGNALR 
         ,typeof(AbpWebSignalRModule)
 #elif FEATURE_SIGNALR_ASPNETCORE
-        ,typeof(AbpAspNetCoreSignalRModule)
+        , typeof(AbpAspNetCoreSignalRModule)
 #endif
      )]
     public class CPMSWebCoreModule : AbpModule
@@ -51,9 +51,7 @@ namespace CPMS
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
 
             Configuration.Modules.AbpAspNetCore()
-                 .CreateControllersForAppServices(
-                     typeof(CPMSApplicationModule).GetAssembly()
-                 );
+                 .CreateControllersForAppServices(typeof(CPMSApplicationModule).GetAssembly(), "cpms");
 
             ConfigureTokenAuth();
         }
